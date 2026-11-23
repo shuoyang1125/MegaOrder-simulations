@@ -1,0 +1,88 @@
+# Editors, operating systems, and Python caches
+.DS_Store
+.idea/
+.vscode/
+.qoder*
+**/__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+# Local Python/Conda environments
+.env
+.venv/
+venv/
+env/
+.conda/
+
+# Algorithm inputs: never store topologies or traffic matrices in Git
+**/topologies/
+**/traffic-matrices/
+*.graphml
+*.pkl
+*.pickle
+*.npy
+*.npz
+
+# Packet-simulation inputs and generated traces
+**/workloads/
+**/manifests/
+**/flows/
+*.pcap
+*.pcapng
+*.trace
+*.tr
+*.dat
+*.tsv
+*.txt
+!**/CMakeLists.txt
+
+# Experiment and solver outputs
+**/outputs/
+**/outputs*/
+**/experiment_logs/
+**/*-logs/
+**/*_logs/
+**/logs/
+**/demo_result/
+*.csv
+*.log
+*.lp
+*.sol
+*.output
+gurobi.log
+
+# Generated figures and documents
+*.png
+*.jpg
+*.jpeg
+*.svg
+*.eps
+*.pdf
+
+# C/C++ and ns-3 build products
+**/build/
+**/cmake-cache/
+**/CMakeFiles/
+**/.lock-ns3_*
+CMakeCache.txt
+cmake_install.cmake
+compile_commands.json
+*.o
+*.obj
+*.a
+*.so
+*.so.*
+*.dylib
+*.dll
+*.exe
+
+# Temporary runtime state
+**/shared_numpy/
+*.pid
+*.status
+*.tmp
+*.swp
+*~
+
