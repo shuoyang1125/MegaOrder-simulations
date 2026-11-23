@@ -189,7 +189,7 @@ if __name__ == '__main__':
         os.makedirs(SRV_TOPO_DIR)
 
     
-    for toponame in PROBLEM_NAMES:
+    for toponame in [topo]:
         topofname = os.path.join(SITE_TOPO_DIR, toponame)
         pathname = '{}-{}-paths_edge-disjoint-{}_dist-metric-inv-cap-dict.pkl'.format(toponame, num_paths, edge_disjoint)
         pathfname = os.path.join(PATH_DIR, pathname)
