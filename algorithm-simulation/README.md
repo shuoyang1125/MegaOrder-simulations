@@ -34,16 +34,34 @@ noise-chain traffic matrices:
 
 ```bash
 bash generate_server_data.sh
-bash benchmarks/gen_noise_tms.sh 100 UsCarrier.graphml
+bash benchmarks/gen_noise_tms.sh 10 Uninett2010.graphml
 ```
 
-## 4. Check the MegaTE experiment inputs
+## 4. Run the experiments
+
+### MegaTE
 
 ```bash
 cd benchmarks
 
-python Run_all.py --algo mega --server 100 \
-  --problem UsCarrier.graphml --slices 10 11 \
-  --epsilon 0.1 --lambda 1 --dry-run
+python Run_all.py --algo mega --server 10 \
+  --problem Uninett2010.graphml --slices 0 1 \
+  --epsilon 0.1 --lambda 1
+```
+
+### MegaOrder
+
+```bash
+python tse.py --server 10 \
+  --problem Uninett2010.graphml --slices 0 1 \
+  --tm-model generic --epsilon 0.1 --lambda 1
+```
+
+### Gurobi
+
+```bash
+python exact.py --server 10 \
+  --problem Uninett2010.graphml --slices 0 1 \
+  --tm-model generic --epsilon 0.1 --lambda 1
 ```
 
