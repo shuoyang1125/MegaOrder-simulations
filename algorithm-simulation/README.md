@@ -1,6 +1,6 @@
 # Algorithm-level simulation
 
-This directory contains the MegaTE algorithm-level simulator, TSE baselines,
+This directory contains the MegaTE algorithm-level simulator, MegaOrder(TSE) baselines,
 exact and LP formulations, input-generation utilities, plotting scripts, and
 batch experiment drivers.
 

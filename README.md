@@ -4,7 +4,7 @@ This repository contains the source code for two complementary evaluation
 layers used by MegaTE:
 
 - [`algorithm-simulation`](algorithm-simulation/README.md) contains the
-  algorithm-level MegaTE, TSE, exact-solver, and analysis code.
+  algorithm-level MegaTE, MegaOrder(TSE), exact-solver, and analysis code.
 - [`packet-simulation`](packet-simulation/README.md) contains the packet-level
   ns-3 simulation source, including the RDMA and traffic-engineering changes.
 

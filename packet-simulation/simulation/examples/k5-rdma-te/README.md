@@ -2,7 +2,7 @@
 
 This directory contains the reproducible K5, 10-endpoints-per-site experiment.
 It reads existing MegaTE artifacts without invoking or modifying a TE solver,
-generates one shared workload manifest, runs ns-3 for Gurobi, TSE, and MegaTE
+generates one shared workload manifest, runs ns-3 for Gurobi, MegaOrder(TSE), and MegaTE
 with seeds 1--5, validates the raw flow records, and creates both paper figures.
 
 Run from `simulation/`:
@@ -41,7 +41,7 @@ figures; the raw per-flow FCT values remain unchanged in the CSV files.
   `ceil_to_1024(TM2_demand_mbps * 1e6 / 8 * 0.5)` and QP wire rate is
   `TM2_demand_mbps * 1076 / 1024`.
 - The 52 Old-to-MegaTE changed pairs are the common measurement set. The
-  expected changed counts within that set are Gurobi 0, TSE 24, MegaTE 52.
+  expected changed counts within that set are Gurobi 0, MegaOrder(TSE) 24, MegaTE 52.
 - Site links are 1 Gbit/s with 1 ms one-way delay. Endpoint links are
   100 Gbit/s with 1 us one-way delay. TE updates once at 100 ms.
 - The shared manifest hash, payload equality, 52-flow measurement set, all
