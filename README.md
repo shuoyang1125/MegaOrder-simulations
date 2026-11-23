@@ -1,4 +1,4 @@
-# MegaTE Simulations
+# MegaOrder Simulations
 
 This repository contains the source code for two complementary evaluation
 layers used by MegaTE:
