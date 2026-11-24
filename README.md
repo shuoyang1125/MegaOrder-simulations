@@ -13,6 +13,8 @@ matrices, generated workloads, packet traces, solver outputs, experiment logs,
 plots, and build products are excluded. Follow the README in each subdirectory
 to prepare the required local inputs.
 
+Maintainer: [Shuo Yang (@shuoyang1125)](https://github.com/shuoyang1125)
+
 ## Repository layout
 
 ```text
