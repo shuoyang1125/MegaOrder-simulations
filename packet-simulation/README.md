@@ -1,58 +1,85 @@
 # Packet-level simulation
 
-This directory is a source-only snapshot of the Alibaba Cloud ns-3 simulator
-with the RDMA and traffic-engineering extensions used by MegaTE. The original
-licenses are retained in this directory and under `simulation/`.
+This directory contains the Alibaba Cloud ns-3.36.1 simulator and the K5 RDMA
+packet-level experiment. Algorithm-level results, generated workloads, and
+experiment outputs are not stored in Git.
 
-The custom work includes changes to the point-to-point RDMA model and the
-following packet-level experiment programs:
+Run the following steps for the K5 experiment with 10 endpoints per site.
 
-- `simulation/scratch/K5RdmaTeNetwork.cc`
-- `simulation/scratch/TeReorderNetwork.cc`
-- `simulation/examples/k5-rdma-te/`
-- `simulation/examples/te-reorder/`
+## 1. Prepare the algorithm-level inputs
 
-## Build
+First follow [`../algorithm-simulation/README.md`](../algorithm-simulation/README.md)
+to create the `megate` environment and generate the K5 Old, MegaTE, MegaOrder,
+and Gurobi routes, the server-to-site mapping, and the endpoint-level TM2.
 
-Install the normal ns-3 build dependencies, then run:
+The packet simulator only reads these saved files; it does not rerun a TE
+solver. In
+`simulation/examples/k5-rdma-te/generate_manifest.py`, set `--megate-root` to
+the directory that contains `benchmarks/`, `traffic-matrices/`, and
+`topologies/`:
 
-```bash
-cd simulation
-./ns3 configure --disable-examples
-./ns3 build
+```python
+parser.add_argument("--megate-root", type=Path,
+                    default=Path("/root/MegaTE-main"))
 ```
 
-The Alibaba RDMA extensions define an `ns3::Event` type that conflicts with a
-Wi-Fi header used by some unrelated stock examples. For that reason, the
-default instructions do not enable every upstream example at once. The custom
-scratch programs are included in the normal build.
+For a self-contained packaged setup, replace the value with the absolute path
+to `../algorithm-simulation/` after generating its input and result files.
 
-## Experiment inputs
+## 2. Configure local paths
 
-Topology descriptions, flow lists, generated workload manifests, packet
-traces, and experiment outputs are not included in this repository. Before
-running an experiment, create the files referenced by its configuration script
-or generate them with the supplied Python utilities.
-
-The K5 workflow uses `examples/k5-rdma-te/generate_manifest.py` to translate
-algorithm-level routing/traffic results into packet-level inputs. The resulting
-topology and workload files must remain untracked.
-
-Some experiment scripts preserve paths from the original research environment.
-Set their simulator directory, Python interpreter, and local input paths for
-your machine before running them.
-
-## Running
-
-After preparing local inputs and building ns-3, use the scripts in the relevant
-example directory, or invoke a scratch program directly, for example:
+In `simulation/examples/k5-rdma-te/run_transient.sh`, set:
 
 ```bash
-cd simulation
-./ns3 run "K5RdmaTeNetwork --help"
-./ns3 run "TeReorderNetwork --help"
+SIM_DIR=/root/ns-3-alibabacloud/simulation
+PYTHON=/root/miniconda3/envs/megate/bin/python
 ```
 
-Generated `outputs/`, logs, CSV files, traces, figures, and build products are
-ignored and must not be committed.
+`run_transient.sh` passes `$EXP_DIR/config_k5.sh` to `K5RdmaTeNetwork` for every
+algorithm and seed. The program reads this file through `ReadConf(...)`; it
+provides the topology path, output paths, simulation timeout, buffer settings,
+and RDMA parameters. Therefore, its absolute paths must use the same
+`$SIM_DIR/examples/k5-rdma-te` directory.
 
+To reproduce the historical synchronized-run directory name, use the following
+tag assignments in `run_transient.sh`:
+
+```bash
+TAG=epoch${EPOCH_MS}ms_update${TE_UPDATE_MS}ms_start${START_MIN_MS}ms
+TAG=${TAG//./p}
+```
+
+## 3. Build with MTP support
+
+```bash
+cd /root/ns-3-alibabacloud/simulation
+./ns3 configure -d default --enable-mtp --disable-examples
+./ns3 build K5RdmaTeNetwork
+```
+
+## 4. Run the experiment
+
+```bash
+conda activate megate
+cd /root/ns-3-alibabacloud/simulation
+bash examples/k5-rdma-te/run_transient.sh 10 11.5 10
+```
+
+This configuration uses a 10-ms payload epoch, performs one TE update at
+11.5 ms, and starts every flow at exactly 10 ms. The script runs Gurobi,
+MegaOrder (internal key `tse`) and MegaTE, then aggregates the
+CSV files and generates the figures.
+
+## 5. Check the outputs
+
+Results are written to:
+
+```text
+/root/ns-3-alibabacloud/simulation/examples/k5-rdma-te/
+  outputs_epoch10ms_update11p5ms_start10ms/
+```
+
+The directory contains the per-flow CSV files, `experiment_summary.csv`,
+`all_flow_fct_summary.csv`, logs, and the retransmission, reordered-pair, and
+FCT figures in PDF and PNG formats. The shared workload manifest and checksum
+are stored under `workloads/epoch10ms_update11p5ms_start10ms/`.
